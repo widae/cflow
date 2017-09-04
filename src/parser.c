@@ -19,6 +19,10 @@
 #include <cflow.h>
 #include <parser.h>
 
+// widae
+#include <widae.h>
+extern int usedMyOpt;
+
 typedef struct {
      char *name;
      int type_end;
@@ -178,6 +182,8 @@ nexttoken()
      if (curs == tos) {
 	  type = get_token();
 	  tokpush(type, line_num, yylval.str);
+	  // widae
+          setLev(type, yylval.str);
      }
      tok = token_stack[curs];
      curs++;
@@ -1127,18 +1133,31 @@ add_reference(char *name, int line)
 void
 call(char *name, int line)
 {
-     Symbol *sp;
 
+     Symbol *sp;
+     
      sp = add_reference(name, line);
      if (!sp)
 	  return;
+
      if (sp->arity < 0)
 	  sp->arity = 0;
      if (caller) {
 	  if (!data_in_list(caller, sp->caller))
 	       linked_list_append(&sp->caller, caller);
-	  if (!data_in_list(sp, caller->callee))
-	       linked_list_append(&caller->callee, sp);
+          // widae
+          if(usedMyOpt){
+	      Symbol * tmp = (Symbol*)malloc(sizeof(Symbol));
+              memcpy(tmp, sp, sizeof(Symbol));
+              tmp->index = ind;
+              ind++;
+              tmp->lev = lev;
+              sp = tmp;	
+	      linked_list_append(&caller->callee, sp);
+	  }else{
+	      if(!data_in_list(sp, caller->callee))
+	          linked_list_append(&caller->callee, sp);
+          }
      }
 }
 

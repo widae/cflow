@@ -125,6 +125,11 @@ struct symbol {
      size_t ord;                   /* ordinal number */
      struct linked_list *caller;   /* List of callers */
      struct linked_list *callee;   /* List of callees */
+
+     // widae
+     int index;
+     int lev;
+
 };
 
 /* Output flags */

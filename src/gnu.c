@@ -18,6 +18,10 @@
 
 #include <cflow.h>
 
+// widae
+extern int usedMyOpt;
+int callerLev[100];
+
 void
 print_function_name(Symbol *sym, int has_subtree)
 {
@@ -46,8 +50,18 @@ print_symbol(FILE *outfile, int line, struct output_symbol *s)
      int has_subtree = s->direct ? 
  	                  s->sym->callee != NULL :
 	                  s->sym->caller != NULL;
-     
-     print_level(s->level, s->last);
+    
+     // widae
+     if(usedMyOpt == 1){
+         printHead(callerLev, s);
+         if(s->sym->decl){
+             initUsed();
+         }
+         setCallerLev(callerLev, s->level, s->sym->lev);
+     }else{
+         print_level(s->level, s->last);
+     }
+
      print_function_name(s->sym, has_subtree);
 	  
      if (brief_listing) {

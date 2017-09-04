@@ -753,9 +753,26 @@ const char version_etc_copyright[] =
      year.  */
   "Copyright %s 2005, 2006, 2009, 2010, 2011 %d Sergey Poznyakoff";
 
+// widae
+
+int usedMyOpt = 0;
+
 int
 main(int argc, char **argv)
 {
+
+     // widae
+     int i;
+     for(i = 0; i < argc; i++){
+         if(!strcmp(argv[i], "-widae")){
+	     usedMyOpt = 1;
+	 }
+     }
+     if(usedMyOpt){
+         argv[1] = argv[argc-1];
+         argc = 2;
+     }
+
      int index;
 
      set_program_name(argv[0]);
